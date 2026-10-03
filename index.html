@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zolomon Games</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+:root{
+    --bg:#08090d;
+    --panel:#11131a;
+    --panel2:#181b24;
+    --text:#f5f7ff;
+    --muted:#969bab;
+    --accent:#7c5cff;
+    --accent2:#00d4ff;
+    --border:#292d39;
+    --danger:#ff5570;
+    --success:#45e69a;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:
+        radial-gradient(circle at 15% 10%,rgba(124,92,255,.18),transparent 28%),
+        radial-gradient(circle at 85% 20%,rgba(0,212,255,.12),transparent 25%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button{
+    font:inherit;
+}
+
+.header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    backdrop-filter:blur(18px);
+    background:rgba(8,9,13,.78);
+    border-bottom:1px solid var(--border);
+}
+
+.nav{
+    max-width:1200px;
+    margin:auto;
+    padding:18px 22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+
+.logo span{
+    color:var(--accent);
+}
+
+.nav button{
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:9px 14px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:35px 22px 70px;
+}
+
+.hero{
+    padding:55px 0 45px;
+    text-align:center;
+}
+
+.hero .badge{
+    display:inline-block;
+    border:1px solid #39304f;
+    background:#171226;
+    color:#b9aaff;
+    padding:7px 13px;
+    border-radius:999px;
+    font-size:13px;
+    margin-bottom:18px;
+}
+
+.hero h1{
+    font-size:clamp(42px,8vw,82px);
+    line-height:.95;
+    letter-spacing:-4px;
+    margin-bottom:20px;
+}
+
+.gradient{
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.hero p{
+    max-width:650px;
+    margin:auto;
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.6;
+}
+
+.section-title{
+    margin:20px 0;
+    font-size:25px;
+}
+
+.games{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:17px;
+}
+
+.card{
+    background:linear-gradient(145deg,var(--panel),#0d0f15);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px;
+    min-height:260px;
+    display:flex;
+    flex-direction:column;
+    transition:.2s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    border-color:#484e61;
+}
+
+.icon{
+    font-size:42px;
+    margin-bottom:18px;
+}
+
+.card h3{
+    font-size:21px;
+    margin-bottom:9px;
+}
+
+.card p{
+    color:var(--muted);
+    line-height:1.5;
+    font-size:14px;
+    flex:1;
+}
+
+.tag{
+    display:inline-block;
+    width:max-content;
+    font-size:11px;
+    padding:5px 8px;
+    border-radius:7px;
+    background:#20232d;
+    color:#bfc4d4;
+    margin-bottom:13px;
+}
+
+.play{
+    border:0;
+    background:linear-gradient(90deg,var(--accent),#5f83ff);
+    color:white;
+    padding:12px;
+    border-radius:11px;
+    cursor:pointer;
+    font-weight:700;
+    margin-top:18px;
+}
+
+.play:hover{
+    filter:brightness(1.15);
+}
+
+.screen{
+    display:none;
+}
+
+.screen.active{
+    display:block;
+}
+
+.game-header{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.back{
+    background:#171922;
+    color:white;
+    border:1px solid var(--border);
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.game-box{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:25px;
+    max-width:900px;
+    margin:auto;
+}
+
+.game-box h2{
+    margin-bottom:8px;
+}
+
+.game-description{
+    color:var(--muted);
+    margin-bottom:25px;
+}
+
+.parts{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:12px;
+}
+
+.option{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    color:white;
+    border-radius:13px;
+    padding:15px;
+    cursor:pointer;
+    text-align:left;
+}
+
+.option:hover{
+    border-color:var(--accent);
+}
+
+.option.selected{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px rgba(124,92,255,.18);
+}
+
+.option small{
+    display:block;
+    color:var(--muted);
+    margin-top:6px;
+}
+
+.total{
+    margin-top:20px;
+    padding:18px;
+    border-radius:13px;
+    background:#0b0d12;
+    font-size:23px;
+    font-weight:bold;
+}
+
+.result{
+    margin-top:20px;
+    background:#0b0d12;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    line-height:1.7;
+}
+
+.big-button{
+    width:100%;
+    margin-top:18px;
+    padding:15px;
+    border:0;
+    border-radius:12px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.range{
+    width:100%;
+    margin:20px 0;
+}
+
+.scale-display{
+    text-align:center;
+    font-size:42px;
+    font-weight:900;
+    margin:25px 0;
+}
+
+.choice-buttons{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:12px;
+}
+
+.choice-buttons button{
+    padding:15px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:var(--panel2);
+    color:white;
+    cursor:pointer;
+}
+
+.phone{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    padding:16px;
+    border-radius:13px;
+    margin-bottom:10px;
+}
+
+.stat{
+    margin:10px 0;
+}
+
+.stat-bar{
+    height:8px;
+    background:#252832;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:5px;
+}
+
+.stat-bar div{
+    height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+
+.score{
+    font-size:34px;
+    font-weight:900;
+    margin:15px 0;
+}
+
+footer{
+    text-align:center;
+    color:#656977;
+    padding:35px 10px;
+    border-top:1px solid var(--border);
+    margin-top:40px;
+}
+
+@media(max-width:600px){
+    .container{
+        padding:20px 15px 50px;
+    }
+
+    .hero{
+        padding:35px 0;
+    }
+
+    .hero h1{
+        letter-spacing:-2px;
+    }
+
+    .game-box{
+        padding:18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="nav">
+        <div class="logo">Zolomon<span>Games</span></div>
+        <button onclick="goHome()">Ana Sayfa</button>
+    </div>
+</header>
+
+<main class="container">
+
+<!-- ANA SAYFA -->
+
+<section id="home" class="screen active">
+
+    <div class="hero">
+        <div class="badge">FREE • WEB GAMES • 100% ZOLOMON</div>
+
+        <h1>
+            Small Games.<br>
+            <span class="gradient">Big Nonsense.</span>
+        </h1>
+
+        <p>
+            Tarayıcıdan oynanan küçük oyunlar, deneyler ve gereksiz
+            derecede eğlenceli fikirler. Kurulum yok. Üyelik yok.
+            Para yok.
+        </p>
+    </div>
+
+    <h2 class="section-title">🎮 Oyunlar</h2>
+
+    <div class="games">
+
+        <div class="card">
+            <div class="icon">🖥️</div>
+            <span class="tag">BUILD</span>
+            <h3>PC Builder</h3>
+            <p>
+                Bütçeni belirle, parçalarını seç ve hayali bilgisayarını oluştur.
+            </p>
+            <button class="play" onclick="openGame('pc')">Oyna →</button>
+        </div>
+
+        <div class="card">
+            <div class="icon">😈</div>
+            <span class="tag">CHAOS</span>
+            <h3>Ragebait Simulator</h3>
+            <p>
+                İnternette gördüğün saçma yorumlara ne kadar dayanabilirsin?
+            </p>
+            <button class="play" onclick="openGame('rage')">Oyna →</button>
+        </div>
+
+        <div class="card">
+            <div class="icon">🌌</div>
+            <span class="tag">SPACE</span>
+            <h3>Universe Scale</h3>
+            <p>
+                Küçük nesnelerden galaksilere kadar kozmik ölçekte yolculuk yap.
+            </p>
+            <button class="play" onclick="openGame('space')">Oyna →</button>
+        </div>
+
+        <div class="card">
+            <div class="icon">🎲</div>
+            <span class="tag">RANDOM</span>
+            <h3>Decision Maker</h3>
+            <p>
+                Karar veremiyor musun? Kararı artık Zolomon versin.
+            </p>
+            <button class="play" onclick="openGame('decision')">Oyna →</button>
+        </div>
+
+        <div class="card">
+            <div class="icon">📱</div>
+            <span class="tag">TECH</span>
+            <h3>Phone Dumpster</h3>
+            <p>
+                Garip telefonları incele, puanla ve teknolojik çöplüğe gönder.
+            </p>
+            <button class="play" onclick="openGame('phone')">Oyna →</button>
+        </div>
+
+        <div class="card">
+            <div class="icon">🏙️</div>
+            <span class="tag">STRATEGY</span>
+            <h3>Empire Builder</h3>
+            <p>
+                Küçük bir bölgeden başlayıp kendi absürt imparatorluğunu kur.
+            </p>
+            <button class="play" onclick="openGame('empire')">Oyna →</button>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PC BUILDER -->
+
+<section id="pc" class="screen">
+
+    <div class="game-header">
+        <button class="back" onclick="goHome()">← Geri</button>
+        <h1>🖥️ PC Builder</h1>
+    </div>
+
+    <div class="game-box">
+        <h2>Hayalindeki PC'yi topla</h2>
+        <p class="game-description">
+            Her kategoriden bir parça seç.
+        </p>
+
+        <div class="parts">
+
+            <button class="option pc-part" data-price="3500" onclick="selectPC(this)">
+                CPU<br>
+                <b>Ryzen 5 7600</b>
+                <small>3500 TL</small>
+            </button>
+
+            <button class="option pc-part" data-price="8000" onclick="selectPC(this)">
+                CPU<br>
+                <b>Ryzen 7 7800X3D</b>
+                <small>8000 TL</small>
+            </button>
+
+            <button class="option pc-part" data-price="2500" onclick="selectPC(this)">
+                GPU<br>
+                <b>RTX 4060</b>
+                <small>2500 TL</small>
+            </button>
+
+            <button class="option pc-part" data-price="7000" onclick="selectPC(this)">
+                GPU<br>
+                <b>RTX 5070</b>
+                <small>7000 TL</small>
+            </button>
+
+            <button class="option pc-part" data-price="1800" onclick="selectPC(this)">
+                RAM<br>
+                <b>16 GB DDR5</b>
+                <small>1800 TL</small>
+            </button>
+
+            <button class="option pc-part" data-price="3200" onclick="selectPC(this)">
+                RAM<br>
+                <b>32 GB DDR5</b>
+                <small>3200 TL</small>
+            </button>
+
+            <button class="option pc-part" data-price="1500" onclick="selectPC(this)">
+                SSD<br>
+                <b>1 TB NVMe</b>
+                <small>1500 TL</small>
+            </button>
+
+            <button class="option pc-part" data-price="3000" onclick="selectPC(this)">
+                SSD<br>
+                <b>2 TB NVMe</b>
+                <small>3000 TL</small>
+            </button>
+
+        </div>
+
+        <div class="total">
+            Sistem toplamı: <span id="pcTotal">0</span> TL
+        </div>
+
+        <button class="big-button" onclick="buildPC()">
+            PC'Yİ DEĞERLENDİR
+        </button>
+
+        <div id="pcResult" class="result" style="display:none"></div>
+    </div>
+
+</section>
+
+
+<!-- RAGEBAIT -->
+
+<section id="rage" class="screen">
+
+    <div class="game-header">
+        <button class="back" onclick="goHome()">← Geri</button>
+        <h1>😈 Ragebait Simulator</h1>
+    </div>
+
+    <div class="game-box">
+
+        <h2>Sinir seviyeni test et</h2>
+
+        <p class="game-description">
+            Ekrandaki yorumlara tepki verme. Her yanlış tepki sinirini artırır.
+        </p>
+
+        <div id="rageText" class="result">
+            "Android kullanan herkes teknoloji cahilidir."
+        </div>
+
+        <div class="score">
+            Sinir: <span id="rageScore">0</span>/100
+        </div>
+
+        <div class="choice-buttons">
+            <button onclick="rageReact(10)">😐 Geç</button>
+            <button onclick="rageReact(25)">🤨 Cevap ver</button>
+            <button onclick="rageReact(40)">😡 Tartış</button>
+            <button onclick="rageReact(60)">💀 İnterneti kapat</button>
+        </div>
+
+        <button class="big-button" onclick="resetRage()">
+            YENİ YORUM
+        </button>
+
+        <div id="rageResult" class="result"></div>
+
+    </div>
+
+</section>
+
+
+<!-- UNIVERSE SCALE -->
+
+<section id="space" class="screen">
+
+    <div class="game-header">
+        <button class="back" onclick="goHome()">← Geri</button>
+        <h1>🌌 Universe Scale</h1>
+    </div>
+
+    <div class="game-box">
+
+        <h2>Ölçeği büyüt</h2>
+
+        <p class="game-description">
+            Kaydırıcıyı kullanarak küçük nesnelerden kozmik yapılara ilerle.
+        </p>
+
+        <input
+            class="range"
+            type="range"
+            min="0"
+            max="100"
+            value="0"
+            oninput="scaleUniverse(this.value)"
+        >
+
+        <div class="scale-display" id="scaleName">
+            İnsan
+        </div>
+
+        <div class="result" id="scaleInfo">
+            Yaklaşık ölçek: 1 metre
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- DECISION MAKER -->
+
+<section id="decision" class="screen">
+
+    <div class="game-header">
+        <button class="back" onclick="goHome()">← Geri</button>
+        <h1>🎲 Decision Maker</h1>
+    </div>
+
+    <div class="game-box">
+
+        <h2>Karar veremiyor musun?</h2>
+
+        <p class="game-description">
+            Seçeneklerini yaz ve Zolomon'a bırak.
+        </p>
+
+        <input
+            id="decisionInput"
+            placeholder="Örn: Pizza / Lahmacun / Burger"
+            style="
+                width:100%;
+                padding:15px;
+                background:#0b0d12;
+                border:1px solid #292d39;
+                color:white;
+                border-radius:12px;
+                outline:none;
+            "
+        >
+
+        <button class="big-button" onclick="makeDecision()">
+            KARAR VER 🎲
+        </button>
+
+        <div id="decisionResult" class="result">
+            Henüz karar verilmedi.
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PHONE DUMPSTER -->
+
+<section id="phone" class="screen">
+
+    <div class="game-header">
+        <button class="back" onclick="goHome()">← Geri</button>
+        <h1>📱 Phone Dumpster</h1>
+    </div>
+
+    <div class="game-box">
+
+        <h2>Telefonu değerlendir</h2>
+
+        <p class="game-description">
+            Telefonun özelliklerine bak ve onu teknolojik çöplüğe gönderip göndermeyeceğine karar ver.
+        </p>
+
+        <div id="phoneCard"></div>
+
+        <div class="choice-buttons">
+            <button onclick="phoneVote(true)">🔥 Kullanılır</button>
+            <button onclick="phoneVote(false)">🗑️ Çöplük</button>
+        </div>
+
+        <div id="phoneResult" class="result"></div>
+
+        <button class="big-button" onclick="newPhone()">
+            BAŞKA TELEFON
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- EMPIRE -->
+
+<section id="empire" class="screen">
+
+    <div class="game-header">
+        <button class="back" onclick="goHome()">← Geri</button>
+        <h1>🏙️ Empire Builder</h1>
+    </div>
+
+    <div class="game-box">
+
+        <h2>İmparatorluğunu kur</h2>
+
+        <p class="game-description">
+            Kaynaklarını kullan. Şehrini büyüt. Dünyayı ele geçir.
+        </p>
+
+        <div class="score">
+            💰 <span id="money">100</span> | 🏙️ <span id="city">1</span>
+        </div>
+
+        <div class="choice-buttons">
+
+            <button onclick="empireAction('tax')">
+                💰 Vergi Topla
+            </button>
+
+            <button onclick="empireAction('build')">
+                🏗️ Bina Yap
+            </button>
+
+            <button onclick="empireAction('army')">
+                🛡️ Ordu Kur
+            </button>
+
+            <button onclick="empireAction('expand')">
+                🌍 Genişle
+            </button>
+
+        </div>
+
+        <div id="empireLog" class="result">
+            İmparatorluğun hazır.
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+    Zolomon Games • Made for the web • 100% free
+</footer>
+
+
+<script>
+
+/* -------------------------
+   SAYFA SİSTEMİ
+------------------------- */
+
+function openGame(game){
+
+    document.querySelectorAll(".screen")
+        .forEach(x => x.classList.remove("active"));
+
+    document.getElementById(game)
+        .classList.add("active");
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+function goHome(){
+
+    document.querySelectorAll(".screen")
+        .forEach(x => x.classList.remove("active"));
+
+    document.getElementById("home")
+        .classList.add("active");
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+
+/* -------------------------
+   PC BUILDER
+------------------------- */
+
+let pcTotal = 0;
+
+function selectPC(button){
+
+    const category = button.innerText
+        .split("\n")[0];
+
+    document.querySelectorAll(".pc-part")
+        .forEach(x => {
+
+            if(x.innerText.startsWith(category)){
+                x.classList.remove("selected");
+            }
+
+        });
+
+    button.classList.add("selected");
+
+    pcTotal = 0;
+
+    document.querySelectorAll(".pc-part.selected")
+        .forEach(x => {
+
+            pcTotal += Number(
+                x.dataset.price
+            );
+
+        });
+
+    document.getElementById("pcTotal")
+        .innerText = pcTotal.toLocaleString("tr-TR");
+}
+
+function buildPC(){
+
+    const result =
+        document.getElementById("pcResult");
+
+    let performance;
+
+    if(pcTotal >= 20000){
+        performance =
+            "🚀 Bu sistem artık küçük bir uzay programını yönetmeye çalışıyor.";
+    }
+    else if(pcTotal >= 12000){
+        performance =
+            "🔥 Gayet güçlü bir sistem.";
+    }
+    else if(pcTotal >= 7000){
+        performance =
+            "👍 Orta-üst seviye bir sistem.";
+    }
+    else{
+        performance =
+            "🥲 Bütçe PC'si. Ama en azından açılıyor.";
+    }
+
+    result.style.display="block";
+
+    result.innerHTML =
+        "<b>PC Analizi</b><br><br>" +
+        "Toplam fiyat: " +
+        pcTotal.toLocaleString("tr-TR") +
+        " TL<br><br>" +
+        performance;
+}
+
+
+/* -------------------------
+   RAGEBAIT
+------------------------- */
+
+let rageScore = 0;
+
+const rageComments = [
+
+    "Android kullanan herkes teknoloji cahilidir.",
+
+    "4 GB RAM 2026 için fazlasıyla yeter.",
+
+    "FPS oyunlarında grafik önemli değil, 20 FPS de oynanır.",
+
+    "Bir telefonun kamerası 200 MP ise kesin daha iyidir.",
+
+    "Her laptop oyun bilgisayarıdır.",
+
+    "8K video izlemek insan gözünü bozmaz, çünkü 8K çok havalıdır."
+
+];
+
+function rageReact(amount){
+
+    rageScore += amount;
+
+    if(rageScore > 100)
+        rageScore = 100;
+
+    document.getElementById("rageScore")
+        .innerText = rageScore;
+
+    const result =
+        document.getElementById("rageResult");
+
+    if(rageScore < 30){
+        result.innerText =
+            "😌 Sakin kaldın. İnternet seni henüz yenemedi.";
+    }
+    else if(rageScore < 70){
+        result.innerText =
+            "😐 Hafif sinirlendin. Klavyeye dikkat.";
+    }
+    else if(rageScore < 100){
+        result.innerText =
+            "😡 KIRMIZI ALARM. Tartışmaya girme.";
+    }
+    else{
+        result.innerText =
+            "💀 Tebrikler. İnternet seni ele geçirdi.";
+    }
+}
+
+function resetRage(){
+
+    const comment =
+        rageComments[
+            Math.floor(
+                Math.random()*rageComments.length
+            )
+        ];
+
+    document.getElementById("rageText")
+        .innerText =
+        '"' + comment + '"';
+
+    rageScore = 0;
+
+    document.getElementById("rageScore")
+        .innerText = "0";
+
+    document.getElementById("rageResult")
+        .innerText =
+        "Yeni yorum geldi. Sakin ol.";
+}
+
+
+/* -------------------------
+   UNIVERSE SCALE
+------------------------- */
+
+function scaleUniverse(value){
+
+    value = Number(value);
+
+    const names = [
+        "Atom",
+        "Hücre",
+        "İnsan",
+        "Bina",
+        "Şehir",
+        "Dünya",
+        "Jüpiter",
+        "Güneş",
+        "Güneş Sistemi",
+        "Işık Yılı",
+        "Samanyolu",
+        "Galaksi Kümesi",
+        "Gözlemlenebilir Evren"
+    ];
+
+    const info = [
+        "≈ 10⁻¹⁰ metre",
+        "≈ 10⁻⁵ metre",
+        "≈ 1 metre",
+        "≈ 100 metre",
+        "≈ 10⁴ metre",
+        "≈ 1.27 × 10⁷ metre",
+        "≈ 1.4 × 10⁸ metre",
+        "≈ 1.4 × 10⁹ metre",
+        "≈ 10¹³ metre",
+        "≈ 9.46 × 10¹⁵ metre",
+        "≈ 10²¹ metre",
+        "≈ 10²⁴ metre",
+        "≈ 10²⁷ metre"
+    ];
+
+    const index =
+        Math.min(
+            names.length-1,
+            Math.floor(value / 100 * names.length)
+        );
+
+    document.getElementById("scaleName")
+        .innerText = names[index];
+
+    document.getElementById("scaleInfo")
+        .innerText =
+        "Yaklaşık ölçek: " + info[index];
+}
+
+
+/* -------------------------
+   DECISION MAKER
+------------------------- */
+
+function makeDecision(){
+
+    const input =
+        document.getElementById("decisionInput")
+            .value;
+
+    const result =
+        document.getElementById("decisionResult");
+
+    const options =
+        input
+            .split("/")
+            .map(x => x.trim())
+            .filter(x => x.length > 0);
+
+    if(options.length < 2){
+
+        result.innerText =
+            "En az iki seçenek yaz. Örn: Pizza / Burger";
+
+        return;
+    }
+
+    const choice =
+        options[
+            Math.floor(
+                Math.random()*options.length
+            )
+        ];
+
+    result.innerHTML =
+        "🎲 Kararım:<br><br>" +
+        "<strong style='font-size:28px'>" +
+        choice +
+        "</strong>";
+}
+
+
+/* -------------------------
+   PHONE DUMPSTER
+------------------------- */
+
+const phones = [
+
+    {
+        name:"PotatoPhone X",
+        ram:4,
+        storage:64,
+        battery:5000,
+        price:3500
+    },
+
+    {
+        name:"Galaxy Ultra Mega",
+        ram:12,
+        storage:256,
+        battery:5000,
+        price:28000
+    },
+
+    {
+        name:"Budget Brick Pro",
+        ram:6,
+        storage:128,
+        battery:6000,
+        price:7000
+    },
+
+    {
+        name:"Quantum Phone 9000",
+        ram:24,
+        storage:1024,
+        battery:8000,
+        price:99999
+    }
+
+];
+
+let currentPhone;
+
+function newPhone(){
+
+    currentPhone =
+        phones[
+            Math.floor(
+                Math.random()*phones.length
+            )
+        ];
+
+    document.getElementById("phoneCard")
+        .innerHTML = `
+
+        <div class="phone">
+            <div>
+                <b>${currentPhone.name}</b>
+                <div class="stat">
+                    RAM: ${currentPhone.ram} GB
+                    <div class="stat-bar">
+                        <div style="width:${Math.min(currentPhone.ram/24*100,100)}%"></div>
+                    </div>
+                </div>
+
+                <div class="stat">
+                    Depolama: ${currentPhone.storage} GB
+                    <div class="stat-bar">
+                        <div style="width:${Math.min(currentPhone.storage/1024*100,100)}%"></div>
+                    </div>
+                </div>
+
+                <div class="stat">
+                    Batarya: ${currentPhone.battery} mAh
+                </div>
+
+                <div class="stat">
+                    Fiyat: ${currentPhone.price.toLocaleString("tr-TR")} TL
+                </div>
+            </div>
+
+            <div style="font-size:45px">📱</div>
+        </div>
+        `;
+
+    document.getElementById("phoneResult")
+        .innerText =
+        "Kararını ver: Kullanılır mı, çöplük mü?";
+}
+
+function phoneVote(good){
+
+    const result =
+        document.getElementById("phoneResult");
+
+    if(!currentPhone)
+        return;
+
+    if(good){
+        result.innerText =
+            "🔥 Telefonu çöplükten kurtardın.";
+    }
+    else{
+        result.innerText =
+            "🗑️ Telefon teknolojik çöplüğe gönderildi.";
+    }
+}
+
+newPhone();
+
+
+/* -------------------------
+   EMPIRE BUILDER
+------------------------- */
+
+let money = 100;
+let city = 1;
+
+function updateEmpire(){
+
+    document.getElementById("money")
+        .innerText = money;
+
+    document.getElementById("city")
+        .innerText = city;
+}
+
+function empireAction(action){
+
+    const log =
+        document.getElementById("empireLog");
+
+    if(action === "tax"){
+
+        money += 30;
+
+        log.innerText =
+            "💰 Halktan vergi topladın. Halk seni seviyor mu? Muhtemelen hayır.";
+    }
+
+    if(action === "build"){
+
+        if(money >= 50){
+
+            money -= 50;
+            city++;
+
+            log.innerText =
+                "🏗️ Yeni bina inşa edildi. Şehrin büyüyor.";
+        }
+        else{
+
+            log.innerText =
+                "🥲 Bina yapacak paran yok.";
+        }
+    }
+
+    if(action === "army"){
+
+        if(money >= 40){
+
+            money -= 40;
+
+            log.innerText =
+                "🛡️ Ordu kuruldu. Komşu ülkeler endişeli.";
+        }
+        else{
+
+            log.innerText =
+                "💸 Ordu için para lazım.";
+        }
+    }
+
+    if(action === "expand"){
+
+        if(money >= 100){
+
+            money -= 100;
+            city += 3;
+
+            log.innerText =
+                "🌍 Topraklarını genişlettin. Harita biraz daha senin.";
+        }
+        else{
+
+            log.innerText =
+                "🗺️ Genişlemek için 100 para gerekiyor.";
+        }
+    }
+
+    updateEmpire();
+}
+
+</script>
+
+</body>
+              </html>
